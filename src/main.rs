@@ -1,5 +1,3 @@
-use rand;
-
 ///struct for the maze containing the array for the nodes and the barriers
 struct Maze {
     count: u32,
@@ -24,7 +22,7 @@ impl Maze {
                     res.push_str(&'\u{0020}'.to_string());
                 }
             }
-            res.push_str("\n");
+            res.push('\n');
             res.push_str(&'\u{02D1}'.to_string());
             for w in h {
                 if w[2] == 1 {
@@ -34,7 +32,7 @@ impl Maze {
                 }
                 res.push_str(&'\u{02D1}'.to_string());
             }
-            res.push_str("\n");
+            res.push('\n');
         }
 
         println!("{}", res);
@@ -57,6 +55,7 @@ impl Maze {
     }
 
     ///set neighboring nodes of the grid to the next count if they are not yet set and if there is no barrier
+    #[allow(clippy::collapsible_if)]
     fn step(&mut self) {
         for h in 0..self.height {
             for w in 0..self.width {
@@ -107,9 +106,10 @@ impl Default for Maze {
 
 fn main() {
     'outer: loop {
-        let mut maze: Maze = Default::default();
-        maze.horizontal_weight = 0.5;
-        maze.vertical_weight = 0.6;
+        let mut maze: Maze = Maze {
+            vertical_weight: 0.6,
+            ..Default::default()
+        };
 
         //fill the maze
         //-------------------------------------------------------------------------
