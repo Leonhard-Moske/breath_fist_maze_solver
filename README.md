@@ -10,7 +10,7 @@
 
 ## Future ideas
 
-* visaul output
+* visual output
 * variable size of maze
 * variable start 7 endpoint
 * 3D
