@@ -17,7 +17,7 @@ impl Maze {
         for h in self.grid {
             res.push_str(&'\u{007C}'.to_string());
             for w in h {
-                res.push_str(&w[0].to_string());
+                res += &format!("{:02}", &w[0]);
                 if w[1] == 1 {
                     res.push_str(&'\u{007C}'.to_string());
                 } else {
