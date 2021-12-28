@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["main",""]],"struct":[["Maze","struct for the maze containing the array for the nodes and the barriers"]]});
