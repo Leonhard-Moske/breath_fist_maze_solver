@@ -2,19 +2,11 @@
 
 ## TODO
 
-* array for nodes and barriers check
-* fill maze check
-* print maze check
-* calculate barriers check
-* get neigboring node and barrier there
-* step for solving
-* break statement
-
-## structs
-
-# maze
+* path from start to finish
 
 ## Execution
+
+> cargo run
 
 ## Future ideas
 
