@@ -1,3 +1,9 @@
+extern crate termion;
+
+use termion::{color};
+
+use std::{thread, time};
+
 ///struct for the maze containing the array for the nodes and the barriers
 struct Maze {
     count: u32,
@@ -15,7 +21,18 @@ impl Maze {
         for h in self.grid {
             res.push_str(&'\u{007C}'.to_string());
             for w in h {
-                res += &format!("{:02}", &w[0]);
+                if w[0] == self.count {
+                    res += &format!(
+                        "{}{:02}{}",
+                        color::Fg(color::Red),
+                        &w[0],
+                        color::Fg(color::Reset)
+                    );
+                } else if w[0] != 0 {
+                    res += &format!("{}{:02}{}", color::Fg(color::LightYellow), &w[0], color::Fg(color::Reset));
+                } else {
+                    res += &format!("{}{:02}", color::Fg(color::Reset), &w[0]);
+                }
                 if w[1] == 1 {
                     res.push_str(&'\u{007C}'.to_string());
                 } else {
@@ -119,10 +136,10 @@ impl Maze {
     }
 
     ///put everything together and solve the maze
-    fn solve_maze(&mut self){
-        for _i in 0..self.width*self.height {
+    fn solve_maze(&mut self) {
+        for _i in 0..self.width * self.height {
             self.step();
-            if self.check_if_solved(){
+            if self.check_if_solved() {
                 self.print_maze();
                 break;
             }
@@ -146,24 +163,51 @@ impl Default for Maze {
 }
 
 fn main() {
+
+    let ten_millis = time::Duration::from_millis(600);
+    thread::sleep(ten_millis);
+
+    // loop {
+    //     //create instance of Maze
+    //     //-------------------------------------------------------------------------
+    //     let mut maze: Maze = Maze {
+    //         vertical_weight: 0.6,
+    //         ..Default::default()
+    //     };
+
+    //     //fill the maze
+    //     //-------------------------------------------------------------------------
+    //     maze.fill_borders();
+
+    //     // set starting position
+    //     //-------------------------------------------------------------------------
+    //     maze.init_start(maze.width / 2);
+
+    //     //solve the maze
+    //     //-------------------------------------------------------------------------
+    //     maze.solve_maze();
+    // }
+
+    let mut maze: Maze = Maze {
+        horizontal_weight: 0.4,
+        vertical_weight: 0.6,
+        ..Default::default()
+    };
+
+    maze.fill_borders();
+
+    maze.init_start(maze.width / 2);
+
     loop {
-        //create instance of Maze
-        //-------------------------------------------------------------------------
-        let mut maze: Maze = Maze {
-            vertical_weight: 0.6,
-            ..Default::default()
-        };
+        maze.step();
+        maze.print_maze();
+        let ten_millis = time::Duration::from_millis(300);
 
-        //fill the maze
-        //-------------------------------------------------------------------------
-        maze.fill_borders();
-
-        // set starting position
-        //-------------------------------------------------------------------------
-        maze.init_start(maze.width / 2);
-
-        //solve the maze
-        //-------------------------------------------------------------------------
-        maze.solve_maze();
+        thread::sleep(ten_millis);
+        print!("{esc}c", esc = 27 as char);
+        if maze.check_if_solved() {
+            maze.print_maze();
+            break;
+        }
     }
 }
