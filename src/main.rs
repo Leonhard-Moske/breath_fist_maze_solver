@@ -40,6 +40,24 @@ impl Maze {
         println!("{}", res);
     }
 
+    ///fill the maze borders
+    fn fill_borders(&mut self) {
+        for h in 0..self.height {
+            for w in 0..self.width {
+                self.grid[h][w][2] = if rand::random::<f32>() < self.horizontal_weight {
+                    1
+                } else {
+                    0
+                };
+                self.grid[h][w][1] = if rand::random::<f32>() < self.vertical_weight {
+                    1
+                } else {
+                    0
+                };
+            }
+        }
+    }
+
     ///set one node in the first row to 1
     fn init_start(&mut self, pos: usize) {
         if self.count == 0 {
@@ -89,6 +107,27 @@ impl Maze {
         }
         self.count += 1;
     }
+
+    ///check if the maze was solved by looking if the last row has non zeros
+    fn check_if_solved(&self) -> bool {
+        for node in self.grid[self.height - 1] {
+            if node[0] != 0 && node[2] == 0 {
+                return true;
+            }
+        }
+        false
+    }
+
+    ///put everything together and solve the maze
+    fn solve_maze(&mut self){
+        for _i in 0..self.width*self.height {
+            self.step();
+            if self.check_if_solved(){
+                self.print_maze();
+                break;
+            }
+        }
+    }
 }
 
 ///default values for the maze
@@ -107,7 +146,9 @@ impl Default for Maze {
 }
 
 fn main() {
-    'outer: loop {
+    loop {
+        //create instance of Maze
+        //-------------------------------------------------------------------------
         let mut maze: Maze = Maze {
             vertical_weight: 0.6,
             ..Default::default()
@@ -115,45 +156,14 @@ fn main() {
 
         //fill the maze
         //-------------------------------------------------------------------------
-
-        for h in 0..maze.height {
-            for w in 0..maze.width {
-                maze.grid[h][w][2] = if rand::random::<f32>() < maze.horizontal_weight {
-                    1
-                } else {
-                    0
-                };
-                maze.grid[h][w][1] = if rand::random::<f32>() < maze.vertical_weight {
-                    1
-                } else {
-                    0
-                };
-            }
-        }
-        //maze.print_maze();
-
+        maze.fill_borders();
 
         // set starting position
         //-------------------------------------------------------------------------
         maze.init_start(maze.width / 2);
-        //maze.print_maze();
 
         //solve the maze
         //-------------------------------------------------------------------------
-
-        let mut i: usize = 0;
-        while i < maze.width * maze.height {
-            //maze.print_maze();
-            maze.step();
-            i += 1;
-            //check if maze is solved by checking last row
-            for node in maze.grid[maze.height - 1] {
-                if node[0] != 0 {
-                    println!("Maze is solveable!");
-                    maze.print_maze();
-                    break 'outer;
-                }
-            }
-        }
+        maze.solve_maze();
     }
 }
