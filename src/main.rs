@@ -27,7 +27,9 @@ impl Maze {
             for w in h {
                 if w[2] == 1 {
                     res.push_str(&'\u{2015}'.to_string());
+                    res.push_str(&'\u{2015}'.to_string());
                 } else {
+                    res.push_str(&'\u{0020}'.to_string());
                     res.push_str(&'\u{0020}'.to_string());
                 }
                 res.push_str(&'\u{02D1}'.to_string());
@@ -129,6 +131,7 @@ fn main() {
             }
         }
         //maze.print_maze();
+
 
         // set starting position
         //-------------------------------------------------------------------------
