@@ -1,8 +1,8 @@
 extern crate termion;
 
-use termion::{color};
+use termion::color;
 
-use std::{thread, time};
+//use std::{thread, time};
 
 ///struct for the maze containing the array for the nodes and the barriers
 struct Maze {
@@ -75,10 +75,10 @@ impl Maze {
         }
     }
 
-    ///set one node in the first row to 1
-    fn init_start(&mut self, pos: usize) {
+    ///set one node at pos to 1 (width, height)
+    fn init_start(&mut self, pos: (usize,usize)) { //(width, height)
         if self.count == 0 {
-            self.grid[0][pos][0] = 1;
+            self.grid[pos.1][pos.0][0] = 1;
             self.count = 1;
         } else {
             panic!("already initialized");
@@ -191,7 +191,7 @@ fn main() {
 
         // set starting position
         //-------------------------------------------------------------------------
-        maze.init_start(maze.width / 2);
+        maze.init_start((maze.width/2,maze.height / 2));
 
         println!("ping");
 
