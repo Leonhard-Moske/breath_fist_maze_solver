@@ -11,7 +11,7 @@ struct Maze {
     height: usize,
     horizontal_weight: f32,     // probability for a horizontal barrier
     vertical_weight: f32,       // probability for a vertical barrier
-    grid: [[[u32; 3]; 10]; 20], // [[[node, right, bottom], width ], height]
+    grid: [[[u32; 3]; 20]; 20], // [[[node, right, bottom], width ], height]
 }
 
 impl Maze {
@@ -92,8 +92,10 @@ impl Maze {
     }
 
     ///set neighboring nodes of the grid to the next count if they are not yet set and if there is no barrier
+    ///if no node is changed in one step it is not solveable
     #[allow(clippy::collapsible_if)]
-    fn step(&mut self) {
+    fn step(&mut self) -> bool {
+        let mut stuck: bool = true; 
         for h in 0..self.height {
             for w in 0..self.width {
                 if self.grid[h][w][0] == self.count {
@@ -101,28 +103,33 @@ impl Maze {
                         //if statement for bound protection
                         //if the neighboring node is not yet set and there is no barrier to this node set it to the counter + 1
                         if self.grid[h + 1][w][0] == 0 && self.grid[h][w][2] == 0 {
-                            self.set_grid_point_to_incr_count((h + 1, w))
+                            self.set_grid_point_to_incr_count((h + 1, w));
+                            stuck = false;
                         }
                     }
                     if h != 0 {
                         if self.grid[h - 1][w][0] == 0 && self.grid[h - 1][w][2] == 0 {
-                            self.set_grid_point_to_incr_count((h - 1, w))
+                            self.set_grid_point_to_incr_count((h - 1, w));
+                            stuck = false;
                         }
                     }
                     if w != 0 {
                         if self.grid[h][w - 1][0] == 0 && self.grid[h][w - 1][1] == 0 {
-                            self.set_grid_point_to_incr_count((h, w - 1))
+                            self.set_grid_point_to_incr_count((h, w - 1));
+                            stuck = false;
                         }
                     }
                     if w + 1 != self.width {
                         if self.grid[h][w + 1][0] == 0 && self.grid[h][w][1] == 0 {
-                            self.set_grid_point_to_incr_count((h, w + 1))
+                            self.set_grid_point_to_incr_count((h, w + 1));
+                            stuck = false;
                         }
                     }
                 }
             }
         }
         self.count += 1;
+        stuck
     }
 
     ///check if the maze was solved by looking if the last row has non zeros
@@ -138,7 +145,9 @@ impl Maze {
     ///put everything together and solve the maze
     fn solve_maze(&mut self) {
         for _i in 0..self.width * self.height {
-            self.step();
+            if self.step(){
+                break;
+            }
             if self.check_if_solved() {
                 self.print_maze();
                 break;
@@ -153,61 +162,73 @@ impl Default for Maze {
     fn default() -> Maze {
         Maze {
             count: 0,
-            width: 10,
+            width: 20,
             height: 20,
             horizontal_weight: 0.5,
             vertical_weight: 0.5,
-            grid: [[[0; 3]; 10]; 20],
+            grid: [[[0; 3]; 20]; 20],
         }
     }
 }
 
 fn main() {
-
-    let ten_millis = time::Duration::from_millis(600);
-    thread::sleep(ten_millis);
-
-    // loop {
-    //     //create instance of Maze
-    //     //-------------------------------------------------------------------------
-    //     let mut maze: Maze = Maze {
-    //         vertical_weight: 0.6,
-    //         ..Default::default()
-    //     };
-
-    //     //fill the maze
-    //     //-------------------------------------------------------------------------
-    //     maze.fill_borders();
-
-    //     // set starting position
-    //     //-------------------------------------------------------------------------
-    //     maze.init_start(maze.width / 2);
-
-    //     //solve the maze
-    //     //-------------------------------------------------------------------------
-    //     maze.solve_maze();
-    // }
-
-    let mut maze: Maze = Maze {
-        horizontal_weight: 0.4,
-        vertical_weight: 0.6,
-        ..Default::default()
-    };
-
-    maze.fill_borders();
-
-    maze.init_start(maze.width / 2);
-
     loop {
-        maze.step();
-        maze.print_maze();
-        let ten_millis = time::Duration::from_millis(300);
+        //create instance of Maze
+        //-------------------------------------------------------------------------
+        let mut maze: Maze = Maze {
+            vertical_weight: 0.6,
+            ..Default::default()
+        };
 
-        thread::sleep(ten_millis);
-        print!("{esc}c", esc = 27 as char);
-        if maze.check_if_solved() {
+        println!("ping");
+
+        //fill the maze
+        //-------------------------------------------------------------------------
+        maze.fill_borders();
+
+        println!("ping");
+
+
+        // set starting position
+        //-------------------------------------------------------------------------
+        maze.init_start(maze.width / 2);
+
+        println!("ping");
+
+
+        //solve the maze
+        //-------------------------------------------------------------------------
+        maze.solve_maze();
+
+        println!("ping");
+
+
+        if maze.check_if_solved(){
             maze.print_maze();
             break;
         }
     }
+
+    // let mut maze: Maze = Maze {
+    //     horizontal_weight: 0.4,
+    //     vertical_weight: 0.6,
+    //     ..Default::default()
+    // };
+
+    // maze.fill_borders();
+
+    // maze.init_start(maze.width / 2);
+
+    // loop {
+    //     maze.step();
+    //     maze.print_maze();
+    //     let ten_millis = time::Duration::from_millis(300);
+
+    //     thread::sleep(ten_millis);
+    //     print!("{esc}c", esc = 27 as char);
+    //     if maze.check_if_solved() {
+    //         maze.print_maze();
+    //         break;
+    //     }
+    // }
 }
