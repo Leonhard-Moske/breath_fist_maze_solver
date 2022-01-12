@@ -1,5 +1,7 @@
 ### Breath first Maze solver
 
+:) test ssh config for different ssh keys
+
 ## TODO
 
 * path from start to finish
