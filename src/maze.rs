@@ -1,7 +1,7 @@
 
 
 pub mod maze_mod {
-    use termion::color; // has to be in the module
+    //use termion::color; // has to be in the module
 
     pub struct Maze {
         pub count: u32,
@@ -14,51 +14,51 @@ pub mod maze_mod {
 
     impl Maze {
         ///prints the maze to the console in unicode
-        pub fn print_maze(&self) {
-            let mut res = String::from("");
-            for h in self.grid {
-                res.push_str(&'\u{007C}'.to_string());
-                for w in h {
-                    if w[0] == self.count {
-                        res += &format!(
-                            "{}{:02}{}",
-                            color::Fg(color::Red),
-                            &w[0],
-                            color::Fg(color::Reset)
-                        );
-                    } else if w[0] != 0 {
-                        res += &format!(
-                            "{}{:02}{}",
-                            color::Fg(color::LightYellow),
-                            &w[0],
-                            color::Fg(color::Reset)
-                        );
-                    } else {
-                        res += &format!("{}{:02}", color::Fg(color::Reset), &w[0]);
-                    }
-                    if w[1] == 1 {
-                        res.push_str(&'\u{007C}'.to_string());
-                    } else {
-                        res.push_str(&'\u{0020}'.to_string());
-                    }
-                }
-                res.push('\n');
-                res.push_str(&'\u{02D1}'.to_string());
-                for w in h {
-                    if w[2] == 1 {
-                        res.push_str(&'\u{2015}'.to_string());
-                        res.push_str(&'\u{2015}'.to_string());
-                    } else {
-                        res.push_str(&'\u{0020}'.to_string());
-                        res.push_str(&'\u{0020}'.to_string());
-                    }
-                    res.push_str(&'\u{02D1}'.to_string());
-                }
-                res.push('\n');
-            }
+        // pub fn print_maze(&self) {
+        //     let mut res = String::from("");
+        //     for h in self.grid {
+        //         res.push_str(&'\u{007C}'.to_string());
+        //         for w in h {
+        //             if w[0] == self.count {
+        //                 res += &format!(
+        //                     "{}{:02}{}",
+        //                     color::Fg(color::Red),
+        //                     &w[0],
+        //                     color::Fg(color::Reset)
+        //                 );
+        //             } else if w[0] != 0 {
+        //                 res += &format!(
+        //                     "{}{:02}{}",
+        //                     color::Fg(color::LightYellow),
+        //                     &w[0],
+        //                     color::Fg(color::Reset)
+        //                 );
+        //             } else {
+        //                 res += &format!("{}{:02}", color::Fg(color::Reset), &w[0]);
+        //             }
+        //             if w[1] == 1 {
+        //                 res.push_str(&'\u{007C}'.to_string());
+        //             } else {
+        //                 res.push_str(&'\u{0020}'.to_string());
+        //             }
+        //         }
+        //         res.push('\n');
+        //         res.push_str(&'\u{02D1}'.to_string());
+        //         for w in h {
+        //             if w[2] == 1 {
+        //                 res.push_str(&'\u{2015}'.to_string());
+        //                 res.push_str(&'\u{2015}'.to_string());
+        //             } else {
+        //                 res.push_str(&'\u{0020}'.to_string());
+        //                 res.push_str(&'\u{0020}'.to_string());
+        //             }
+        //             res.push_str(&'\u{02D1}'.to_string());
+        //         }
+        //         res.push('\n');
+        //     }
 
-            println!("{}", res);
-        }
+        //     println!("{}", res);
+        // }
 
         ///fill the maze borders
         pub fn fill_borders(&mut self) {
@@ -153,7 +153,7 @@ pub mod maze_mod {
                     break;
                 }
                 if self.check_if_solved() {
-                    self.print_maze();
+                    //self.print_maze();
                     break;
                 }
             }
